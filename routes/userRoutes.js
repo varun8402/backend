@@ -33,9 +33,12 @@ router.get('/', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
-
+    
     const users = await User.find().skip(skip).limit(limit);
-    res.json({ users, currentPage: page });
+    const totalUsers = await User.countDocuments(); 
+    const totalpages = Math.ceil(totalUsers / limit); 
+    res.json({ users, currentPage: page ,totalPages:totalpages});
+    
   } catch (error) {
     res.status(500).json({ error: 'Error fetching users' });
   }
